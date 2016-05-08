@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="./css/jquery.mobile-1.4.5.min.css">
+<script src="./js/jquery-1.10.2.min.js"></script>
+<script>
+    $(document).bind('mobileinit',function(){
+        $.mobile.changePage.defaults.changeHash = false;
+        $.mobile.hashListeningEnabled = false;
+        $.mobile.pushStateEnabled = false;
+    });
+</script>
+<script src="./js/jquery.mobile-1.4.5.min.js"></script>
+
+<!--
+<link rel="stylesheet" href="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="http://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>
+    $(document).bind('mobileinit',function(){
+        $.mobile.changePage.defaults.changeHash = false;
+        $.mobile.hashListeningEnabled = false;
+        $.mobile.pushStateEnabled = false;
+    });
+</script>
+<script src="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+-->
+
+
+<link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+<div data-role="page" id="pageone">
+  <div data-role="header" data-position="fixed">
+    <a href="#About" class="ui-btn ui-corner-all ui-shadow ui-icon-info ui-btn-icon-left">关于</a>
+    <h1>lproxy</h1>
+    <a href="#" class="ui-btn ui-corner-all ui-shadow ui-icon-plus ui-btn-icon-left" id="plus">添加配置</a>
+  </div>
+
+  <div data-role="panel" id="About">
+         <h2>About me
+         <a href="#pageone" data-rel="close" class="ui-btn ui-btn-inline ui-shadow ui-corner-all ui-btn-a ui-icon-arrow-l ui-btn-icon-left">Close</a>
+         </h2>
+         <p>lproxy</p>
+  </div>
+
+   <div data-role="main" class="ui-content" id="main">
+        <div class="config" id="1">
+                <div data-role="collapsible">
+                  <h3>配置 1</h3>
+                  <p>
+                        <div>
+                            <label for="server_name">服务器:</label><input type="text" name="server_name" id="server_name" placeholder="server_name" />
+                            <label for="server_port">远程端口:</label><input type="number" name="server_port" id="server_port" placeholder="server_port" />
+                            <label for="local_port">本地端口:</label><input type="number" name="local_port" id="local_port" placeholder="bind_port" />
+                            <label for="auth_key">认证 key:</label><input type="password" name="auth_key" id="auth_key" placeholder="auth_key" />
+                        </div>
+                  </p>
+                </div>
+                <div>
+                    <select name="switch" id="switch" data-role="slider">
+                          <option value="off">Off</option>
+                          <option value="on">On</option>
+                    </select>
+                    <div style="float:right;">
+                    <a href="#pagetwo" class="ui-btn ui-btn-inline ui-corner-all ui-shadow" style="height:10px;" data-transition="pop">status</a>
+                    </div>
+                </div>
+        </div>
+
+
+        <div class="config" id="2">
+                <div data-role="collapsible">
+                  <h3>配置 2</h3>
+                  <p>
+                        <div>
+                            <label for="server_name">服务器:</label><input type="text" name="server_name" id="server_name" placeholder="server_name" />
+                            <label for="server_port">远程端口:</label><input type="number" name="server_port" id="server_port" placeholder="server_port" />
+                            <label for="local_port">本地端口:</label><input type="number" name="local_port" id="local_port" placeholder="bind_port" />
+                            <label for="auth_key">认证 key:</label><input type="password" name="auth_key" id="auth_key" placeholder="auth_key" />
+                        </div>
+                  </p>
+                </div>
+                <div>
+                    <select name="switch" id="switch" data-role="slider">
+                          <option value="off">Off</option>
+                          <option value="on">On</option>
+                    </select>
+                    <div style="float:right;">
+                    <a href="#pagetwo" class="ui-btn ui-btn-inline ui-corner-all ui-shadow" style="height:10px;" data-transition="pop">status</a>
+                    </div>
+                </div>
+        </div>
+
+
+        <div class="config" id="3">
+                <div data-role="collapsible">
+                  <h3>配置 3</h3>
+                  <p>
+                        <div>
+                            <label for="server_name">服务器:</label><input type="text" name="server_name" id="server_name" placeholder="server_name" />
+                            <label for="server_port">远程端口:</label><input type="number" name="server_port" id="server_port" placeholder="server_port" />
+                            <label for="local_port">本地端口:</label><input type="number" name="local_port" id="local_port" placeholder="bind_port" />
+                            <label for="auth_key">认证 key:</label><input type="password" name="auth_key" id="auth_key" placeholder="auth_key" />
+                        </div>
+                  </p>
+                </div>
+                <div>
+                    <select name="switch" id="switch" data-role="slider">
+                          <option value="off">Off</option>
+                          <option value="on">On</option>
+                    </select>
+                    <div style="float:right;">
+                    <a href="#pagetwo" class="ui-btn ui-btn-inline ui-corner-all ui-shadow" style="height:10px;" data-transition="pop">status</a>
+                    </div>
+                </div>
+        </div>
+
+   </div>
+
+
+   <!--
+  <div data-role="footer" data-position="fixed">
+    <h1>Fixed 页脚</h1>
+  </div>
+  -->
+</div> <!-- pageone-->
+
+
+<div data-role="page" id="pagetwo">
+  <div data-role="header" data-position="fixed">
+    <a href="#pageone" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left" data-transition="pop">Home</a>
+    <h1>lproxy</h1>
+  </div>
+   <div data-role="main" class="ui-content">
+    <div class="ui-field-contain">
+      <p></p>
+      <fieldset><legend><strong>local status</strong></legend>
+      <textarea readonly="readonly" class="smallfont" style="background:#000; color:#fff" id="status" placeholder="local status"></textarea>
+      <a href="#" class="ui-btn ui-btn-inline ui-shadow" id="clearStatus">Clear Logs</a>
+      </fieldset>
+    </div>
+   </div>
+  <div data-role="footer" data-position="fixed">
+    <h1></h1>
+  </div>
+</div> <!-- pagetwo -->
+
+
+
+</body>
+<script type="text/javascript" src="./js/qwebchannel.js"></script>
+<script type="text/javascript" src="./js/home.js"></script>
+</html>
