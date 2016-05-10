@@ -193,19 +193,30 @@ $(document).ready(function(){
             // 得到父父节点 id
             var id = $(this).closest('div.config').attr('id');
 
-            //output('id = ' + id);
-            var $server_name = $("div#" + id).find("input#server_name").val();
-            var $server_port = $("div#" + id).find("input#server_port").val();
-            var $local_port  = $("div#" + id).find("input#local_port").val();
-            var $auth_key    = $("div#" + id).find("input#auth_key").val();
+            // 目前不支持同时开启多个配置
+            var size = $("div.config").size();
+            for (var _id=1; _id <= size; ++_id) {
+                if (Number(_id) === Number(id)) continue;
+                if ($("div#" + _id).find('select#switch').find('option:selected').text() === 'On') {
+                    $(this).val('Off').slider("refresh");
+                    return;
+                }
+            }
+
+            var $div_id = $("div#" + id);
+            var $server_name = $div_id.find("input#server_name").val();
+            var $server_port = $div_id.find("input#server_port").val();
+            var $local_port  = $div_id.find("input#local_port").val();
+            var $auth_key    = $div_id.find("input#auth_key").val();
 
             if (check_port('server_port', $server_port) === true
                     && check_port('local_port', $local_port) === true) {
 
+                output('id = ' + id);
                 output("server_name: " + $server_name);
-                output("server_port:" + $server_port);
-                output("local_port: " + $local_port);
-                output("auth_key: " + $auth_key);
+                output("server_port: " + $server_port);
+                output("local_port:  " + $local_port);
+                output("auth_key:    " + $auth_key);
                 //
                 var config = gen_json_str($server_name, $server_port, $local_port, $auth_key);
                 //output(config);

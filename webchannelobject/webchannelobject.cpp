@@ -6,7 +6,14 @@
 #include <QDir>
 #include <QFile>
 
+#include <thread>
+
+#include "local/log.h"
+#include "lss/config_local.h"
+
 QT_BEGIN_NAMESPACE
+
+CommunObject* CommunObject::m_this = nullptr;
 
 CommunObject::CommunObject(QGuiApplication* app)
         : QObject(nullptr), m_app(app),
@@ -17,10 +24,19 @@ CommunObject::CommunObject(QGuiApplication* app)
 #endif
 {
     QObject::connect(this, &CommunObject::appExit, app, &QGuiApplication::quit);
+    m_this = this; // 线程不安全的
 }
 CommunObject::~CommunObject() {
     //qDebug() << "~CommunObject()";
     //delete m_engine;
+    m_logt.interrupt();
+}
+
+void CommunObject::sendlog(const QString &log) {
+    emit sendStatus(log);
+}
+void CommunObject::sendlog(const std::string &log) {
+    sendlog(QString::fromStdString(log));
 }
 
 void CommunObject::receiveStatus(const QString& text) {
@@ -90,31 +106,79 @@ void CommunObject::run(const QString& local_json, const QString& id) {
     // /mnt/sdcard/Android/data/lproxy/local1.json
     const QString local_json_file = m_local_json_file + id;
     {
-    QFileInfo json_file_info(local_json_file);
-    const QString path = json_file_info.absolutePath();
-    QDir json_dir(path);
-    if (! json_dir.exists()) {
-        qDebug() << "mkdir " << path;
-        bool ret = json_dir.mkdir(path);
-        if (! ret) {
-            qDebug() << "mkdir error";
+        QFileInfo json_file_info(local_json_file);
+        const QString path = json_file_info.absolutePath();
+        QDir json_dir(path);
+        if (! json_dir.exists()) {
+            qDebug() << "mkdir " << path;
+            bool ret = json_dir.mkdir(path);
+            if (! ret) {
+                qDebug() << "mkdir error";
+                emit offConfig(id);
+                return;
+            }
+        }
+        QFile json_file(local_json_file);
+        if (!json_file.open(QFile::WriteOnly | QFile::Text)) {
+            qDebug() << "Write: open file error";
             emit offConfig(id);
             return;
         }
+        QTextStream out(&json_file);
+        out << local_json;
+        json_file.flush();
+        json_file.close();
     }
+
+    // 加载配置文件
+    lproxy::local::config::get_instance().configure(local_json_file.toStdString());
+
+    // 启动日志输出线程
+    // 目前不支持多个日志输出实例同时进行
+    m_logt.interrupt();
+    boost::thread logt(std::bind(lproxy::mobile::log::output_thread, ""));
+    m_logt = std::move(logt);
+
+    std::thread local(std::bind(CommunObject::localst, this, id));
+    m_localt = std::move(local);
+    m_localt.detach();
+}
+
+void CommunObject::stop(const QString &id) {
+    (void)id;
+
+    if (m_locals) {
+        m_locals->stop();
+        m_logt.interrupt();
     }
-    QFile json_file(local_json_file);
-    if (!json_file.open(QFile::WriteOnly | QFile::Text)) {
-        qDebug() << "Write: open file error";
+}
+
+void CommunObject::localst(const QString& id) {
+    auto& bind_addr = lproxy::local::config::get_instance().get_bind_addr();
+    uint16_t bind_port = lproxy::local::config::get_instance().get_bind_port();
+    //启动 lss_server
+    boost::asio::io_service io_service;
+    lproxy::local::lss_server s(io_service, bind_addr, bind_port);
+    m_locals.reset(&s);
+    for (;;) {
+        try {
+            io_service.run();
+            break;
+        }
+        catch (boost::system::system_error const& e) {
+            logerror(e.what());
+        }
+        catch (const std::exception& e) {
+            logerror(e.what());
+        }
+        catch (...) {
+            logerror("An error has occurred. io_service_left.run()");
+        }
+    }
+    //
+    if (m_locals && m_locals->stopped()) {
         emit offConfig(id);
-        return;
     }
-    QTextStream out(&json_file);
-    out << local_json;
-    json_file.flush();
-    json_file.close();
-
-
 }
 
 void CommunObject::load_json(const QString &id) {
