@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include <functional>
+//#include <QtDebug>
 
 using namespace lproxy;
 
@@ -102,6 +103,7 @@ sdata_t lproxy::mobile::log::output_format(const std::shared_ptr<LogVal>& val) {
         //<< ' ' << val->func_name
         //<< val->extra
         << std::endl;
+    //qDebug(oss.str().c_str());
     return oss.str();
     /*
     CommunObject* obj = CommunObject::get_instance();

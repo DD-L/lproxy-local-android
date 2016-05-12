@@ -32,17 +32,16 @@ CommunObject::CommunObject(QGuiApplication* app)
 CommunObject::~CommunObject() {
     //qDebug() << "~CommunObject()";
     //delete m_engine;
-
-    /*
-    if (m_logt) {
-        try {
-        m_logt->interrupt();
+    try {
+        if (m_logt) {
+            m_logt->detach();
         }
-        catch(const std::system_error& e) {
-            qDebug() << e.what() << " in CommunObject::~CommunObject";
+        if (m_localt) {
+            m_localt->detach();
         }
     }
-    */
+    catch (std::system_error&) {}
+    catch (...) {}
 }
 
 void CommunObject::sendlog(const QString &log) {
@@ -118,11 +117,12 @@ void CommunObject::run(const QString& local_json, const QString& id) {
     }
     m_localt = std::make_shared<std::thread>(std::bind(&CommunObject::localst, this, id));
     m_localt->detach();
+
+    m_active_id = id;
 }
 
 void CommunObject::stop(const QString &id) {
-    (void)id;
-
+    if (id != m_active_id) return;
     try {
         if (m_locals) {
             if (! m_locals->stopped()) {
@@ -165,9 +165,6 @@ void CommunObject::localst(const QString& id) {
         while (! m_locals->stopped()) {
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
-
-        //delete m_locals;
-        //m_locals = nullptr;
     }
     m_locals->run(bind_addr, bind_port);
     //

@@ -9,6 +9,7 @@
 #include <lss/lss_server.h>
 #include <boost/thread.hpp> // C++11 中 std::thread 未提供中断点接口
 
+//#pragma pack(4)
 
 class CommunObject : public QObject {
     Q_OBJECT
@@ -60,6 +61,7 @@ private:
     std::shared_ptr<std::thread>               m_localt; // 目前不允许多个配置同时运行
     std::shared_ptr<boost::thread>             m_logt;   // 同上
     static CommunObject*                       m_this;
+    QString m_active_id;
 };
 
 #endif // WEBCHANNELOBJECT_H
