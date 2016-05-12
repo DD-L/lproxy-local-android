@@ -7,6 +7,7 @@
 #include <QFile>
 
 #include <thread>
+#include <system_error>
 
 #include "local/log.h"
 #include "lss/config_local.h"
@@ -23,13 +24,25 @@ CommunObject::CommunObject(QGuiApplication* app)
             m_local_json_file("config/local.json")
 #endif
 {
+    m_locals = std::make_shared<lproxy::local::lss_server>(m_ios_left, m_ios_right);
+    assert(m_locals);
     QObject::connect(this, &CommunObject::appExit, app, &QGuiApplication::quit);
     m_this = this; // 线程不安全的
 }
 CommunObject::~CommunObject() {
     //qDebug() << "~CommunObject()";
     //delete m_engine;
-    m_logt.interrupt();
+
+    /*
+    if (m_logt) {
+        try {
+        m_logt->interrupt();
+        }
+        catch(const std::system_error& e) {
+            qDebug() << e.what() << " in CommunObject::~CommunObject";
+        }
+    }
+    */
 }
 
 void CommunObject::sendlog(const QString &log) {
@@ -43,64 +56,6 @@ void CommunObject::receiveStatus(const QString& text) {
     qDebug() << "receiveText: " << text;
     emit sendStatus(text);
 }
-
-//void CommunObject::receiveKey(const QString& key) {
-//    qDebug() << "receiveKey: " << key;
-//    // debug
-//    emit sendStatus(key);
-//    // do something
-//    // ...
-//}
-//
-//void CommunObject::receiveInfo2Encrypt(const QString& info) {
-//    qDebug() << "receiveInfo2Encrypt: " << info;
-//    // debug
-//    emit sendStatus(info);
-//
-//    // do something
-//    // ...
-//
-//    emit sendResults(info);
-//}
-//void CommunObject::receiveInfo2Decrypt(const QString& info) {
-//    qDebug() << "receiveInfo2Decrypt: " << info;
-//    // debug
-//    emit sendStatus(info);
-//
-//    // do something
-//    // ...
-//
-//
-//    emit sendResults(info);
-//}
-//
-//void CommunObject::copy2clipboard(const QString& results) {
-//    qDebug() << "copy2clipboard: " << results;
-//    //if (results == "") return false;
-//
-//    QClipboard* clipboard = QGuiApplication::clipboard();
-//    clipboard->setText(results);
-//    const QString originalText = clipboard->text();
-//
-//    // debug
-//    emit sendStatus("Clipboard text: " + originalText);
-//}
-//
-//void CommunObject::clearClipboard() {
-//    QClipboard* clipboard = QGuiApplication::clipboard();
-//
-//    clipboard->clear();
-//    /*
-//     * Qt bug:          'Android: QClipboard::clear() not implemented'
-//     * Bug description: 'This is done by calling setMimeData() with a null pointer,
-//     *                   but when that happens in the Android plugin we just return
-//     *                   without doing anything.'
-//     */
-//#if defined(Q_OS_ANDROID)
-//    clipboard->setMimeData(nullptr);
-//#endif
-//}
-//
 
 void CommunObject::run(const QString& local_json, const QString& id) {
     // /mnt/sdcard/Android/data/lproxy/local1.json
@@ -135,50 +90,91 @@ void CommunObject::run(const QString& local_json, const QString& id) {
 
     // 启动日志输出线程
     // 目前不支持多个日志输出实例同时进行
-    m_logt.interrupt();
-    boost::thread logt(std::bind(lproxy::mobile::log::output_thread, ""));
-    m_logt = std::move(logt);
+    //boost::thread logt(std::bind(lproxy::mobile::log::output_thread, ""));
+    //m_logt = std::move(logt);
 
-    std::thread local(std::bind(CommunObject::localst, this, id));
-    m_localt = std::move(local);
-    m_localt.detach();
+    if (m_logt) {
+        try {
+            if (m_logt->joinable())
+                m_logt->join();
+            else
+                m_logt->detach();
+        }
+        catch (std::system_error&) {}
+        catch (...) {}
+    }
+    m_logt = std::make_shared<boost::thread>(std::bind(lproxy::mobile::log::output_thread, ""));
+    //m_logt->detach();
+
+    if (m_localt) {
+        try {
+            if (m_localt->joinable())
+                m_localt->join();
+            else
+                m_localt->detach();
+        }
+        catch (std::system_error&) {}
+        catch (...) {}
+    }
+    m_localt = std::make_shared<std::thread>(std::bind(&CommunObject::localst, this, id));
+    m_localt->detach();
 }
 
 void CommunObject::stop(const QString &id) {
     (void)id;
 
-    if (m_locals) {
-        m_locals->stop();
-        m_logt.interrupt();
+    try {
+        if (m_locals) {
+            if (! m_locals->stopped()) {
+                m_locals->stop();
+            }
+
+            while (! m_locals->stopped()) {
+               std::this_thread::sleep_for(std::chrono::milliseconds(300));
+            }
+
+            //if (m_localt) {
+            //    //m_localt->detach();
+            //    //m_localt->join();
+            //}
+        }
+        if (m_logt) {
+            //loginfo("log_output interrupt...");
+            //loginfo("log_output interrupt...");
+            //loginfo("log_output interrupt...");
+            //loginfo("log_output interrupt...");
+            //loginfo("log_output interrupt...");
+            //loginfo("log_output interrupt...");
+            m_logt->interrupt();
+            //loginfo("log_output interrupt...");
+            //m_logt->detach();
+            m_logt->join();
+        }
+    }
+    catch (const std::system_error& e) {
+        qDebug() << e.what() << " CommunObject::stop";
     }
 }
 
 void CommunObject::localst(const QString& id) {
+    (void)id;
     auto& bind_addr = lproxy::local::config::get_instance().get_bind_addr();
     uint16_t bind_port = lproxy::local::config::get_instance().get_bind_port();
     //启动 lss_server
-    boost::asio::io_service io_service;
-    lproxy::local::lss_server s(io_service, bind_addr, bind_port);
-    m_locals.reset(&s);
-    for (;;) {
-        try {
-            io_service.run();
-            break;
+    if (m_locals) {
+        while (! m_locals->stopped()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
-        catch (boost::system::system_error const& e) {
-            logerror(e.what());
-        }
-        catch (const std::exception& e) {
-            logerror(e.what());
-        }
-        catch (...) {
-            logerror("An error has occurred. io_service_left.run()");
-        }
+
+        //delete m_locals;
+        //m_locals = nullptr;
     }
+    m_locals->run(bind_addr, bind_port);
     //
     if (m_locals && m_locals->stopped()) {
-        emit offConfig(id);
+        //emit offConfig(id);
     }
+    qDebug() << "localst exit..";
 }
 
 void CommunObject::load_json(const QString &id) {

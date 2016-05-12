@@ -60,17 +60,17 @@ DEFINES += \
 
 android {
         equals(ANDROID_TARGET_ARCH, x86) {
-            LIBS += -L"$$_PRO_FILE_PWD_/libs/Androidx86" -lcryptopp -lpthread -lrt
+            LIBS += -L"$$_PRO_FILE_PWD_/libs/Androidx86" -lcryptopp #-pthread #-lrt
         } else: equals(ANDROID_TARGET_ARCH, armeabi-v7a) {
-            LIBS += -L"$$_PRO_FILE_PWD_/libs/Androidarmeabiv7a" -lcryptopp -lpthread -lrt
+            LIBS += -L"$$_PRO_FILE_PWD_/libs/Androidarmeabiv7a" -lcryptopp #-pthread #-rt
         } else {
-            LIBS += -L"$$_PRO_FILE_PWD_/libs/Android" -lcryptopp -lpthread -lrt
+            LIBS += -L"$$_PRO_FILE_PWD_/libs/Android" -lcryptopp #-pthread #-lrt
         }
         ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android-sources
 }
 win32 {
         QMAKE_CXXFLAGS += -include winsock2.h
-        LIBS += -L"$$_PRO_FILE_PWD_/libs/MinGW32bit" -lcryptopp -lws2_32 -lmswsock
+        LIBS += -L"$$_PRO_FILE_PWD_/libs/MinGW32bit" -lcryptopp -lws2_32 -lmswsock -mthreads
         RC_ICONS = $$PWD/icon/lp64x64.ico
 }
 

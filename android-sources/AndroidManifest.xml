@@ -57,4 +57,5 @@
         <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
 
 
+<uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"/>
 </manifest>

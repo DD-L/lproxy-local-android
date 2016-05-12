@@ -39,11 +39,6 @@ public slots:
         This slot is invoked from the HTML client side and the text displayed on the server side.
     */
     void receiveStatus(const QString& text);
-    //void receiveKey(const QString& key);
-    //void receiveInfo2Encrypt(const QString& info);
-    //void receiveInfo2Decrypt(const QString& info);
-    //void copy2clipboard(const QString& results);
-    //void clearClipboard();
     void run(const QString& local_json, const QString& id);
     void stop(const QString &id);
     void load_json(const QString& id);
@@ -60,9 +55,10 @@ private:
     //    std::shared_ptr<std::thread> t;
     //};
     //std::vector<__locals_thread> m_locals;
+    boost::asio::io_service                    m_ios_left, m_ios_right;
     std::shared_ptr<lproxy::local::lss_server> m_locals;
-    std::thread                                m_localt; // 目前不允许多个配置同时运行
-    boost::thread                              m_logt;   // 同上
+    std::shared_ptr<std::thread>               m_localt; // 目前不允许多个配置同时运行
+    std::shared_ptr<boost::thread>             m_logt;   // 同上
     static CommunObject*                       m_this;
 };
 

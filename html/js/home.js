@@ -65,105 +65,6 @@ $(document).ready(function(){
 
   // event
 
-  //$("a#keytextmode").click(function(){
-  //  var $a_keytextmode = $("a#keytextmode");
-  //  var $input_keyvalue = $("input#keyvalue");
-  //  var $input_keyplain = $("input#keyplain");
-  //  var $input_keycipher = $("input#keycipher");
-  //  var $div_keyplain = $("div#keyplain");
-  //  var $div_keycipher = $("div#keycipher");
-
-  //  var mode = $a_keytextmode.text();
-  //  var key = $input_keyvalue.val();
-  //  switch(mode) {
-  //  case "cipher":
-  //    $a_keytextmode.text("plain");
-  //    // sync key
-  //    key = $input_keyplain.val();
-  //    $input_keyvalue.val(key);
-  //    $input_keycipher.val(key);
-
-  //    $div_keyplain.hide();
-  //    $div_keycipher.show();
-  //  break;
-  //  case "plain":
-  //  defualt:
-  //    $a_keytextmode.text("cipher");
-  //    // sync key
-  //    key = $input_keycipher.val();
-  //    $input_keyvalue.val(key);
-  //    $input_keyplain.val(key);
-
-  //    $div_keycipher.hide();
-  //    $div_keyplain.show();
-  //  break;
-  //  }
-  //});
-
-  //$("input#keycipher").on('input', function(){
-  //  var key = $("input#keycipher").val();
-  //  $("input#keyplain").val(key);
-  //  $("input#keyvalue").val(key);
-  //});
-
-  //$("input#keyplain").on('input', function(){
-  //  var key = $("input#keyplain").val();
-  //  $("input#keycipher").val(key);
-  //  $("input#keyvalue").val(key);
-  //});
-
-  //$("#encrypt").click(function(){
-  //  var text = $("#info").val();
-  //  if ( (!text) || isKeyEmpty()) {
-  //    return;
-  //  }
-  //  var key = $("input#keyvalue").val();
-  //  commun_object.receiveKey(key);
-
-  //  commun_object.receiveInfo2Encrypt(text);
-  //});
-  //$("#decrypt").click(function(){
-  //  var text = $("#info").val();
-  //  if ( (!text) || isKeyEmpty()) {
-  //    return;
-  //  }
-  //  var key = $("input#keyvalue").val();
-  //  commun_object.receiveKey(key);
-
-  //  commun_object.receiveInfo2Decrypt(text);
-  //});
-
-
-  //$("a#clientState").click(function(){
-  //    output(getClientStateMessage());
-  //});
-
-  //$("a#connect").click(function(){
-  //    var state = $("input#clientState").val();
-  //    switch(state) {
-  //    case 'Connecting':
-  //    case 'Connected':
-  //        break;
-  //    case 'Disconnect':
-  //    default:
-  //        socket = new WebSocket(baseUrl);
-  //        break;
-  //    }
-  //    output(getClientStateMessage());
-  //});
-
-  //$("#copy").click(function(){
-  //  var $div_copiedState = $("div#copiedState");
-  //  var $textarea_results = $("textarea#results");
-  //  var results = $textarea_results.val();
-  //  if (results) {
-  //      commun_object.copy2clipboard(results);
-  //      $div_copiedState.html('Copied !');
-  //  }
-  //  else {
-  //      $div_copiedState.html('Empty !');
-  //  }
-  //});
 
   //$("#exit").click(function(){
   //  commun_object.appQuit();
@@ -173,26 +74,20 @@ $(document).ready(function(){
   //  commun_object.appQuit();
   //});
 
-  //$("a#clearStatus").click(function(){
-  //  $("textarea#status").val('');
-  //});
-  //$("a#clearResults").click(function() {
-  //  $("textarea#results").val('');
-  //  output("Clear Results");
-  //});
-  //$("a#clearClipboard").click(function() {
-  //  commun_object.clearClipboard();
-  //  output("Clear Clipboad");
-  //});
+  $("a#clearStatus").click(function(){
+    $("textarea#status").val('');
+  });
 
     $("select#switch").change(function() {
         var ret = $(this).find("option:selected").text();
-        if (ret === 'Off' ) return;
+        // 得到父父节点 id
+        var id = $(this).closest('div.config').attr('id');
+        if (ret === 'Off' ) {
+            commun_object.stop(id);
+            return;
+        }
         else // 'On'
         {
-            // 得到父父节点 id
-            var id = $(this).closest('div.config').attr('id');
-
             // 目前不支持同时开启多个配置
             var size = $("div.config").size();
             for (var _id=1; _id <= size; ++_id) {

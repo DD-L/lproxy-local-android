@@ -77,6 +77,7 @@ void lproxy::mobile::log::output_thread(const sdata_t& errlog_filename/* = ""*/)
             boost::this_thread::interruption_point();
         }
         catch (boost::thread_interrupted&) {
+            qDebug() << "log thread interruption_point has been triggered";
             break;
         }
     } 
