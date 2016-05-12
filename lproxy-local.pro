@@ -40,9 +40,7 @@ QML_IMPORT_PATH =
 # Default rules for deployment.
 include(deployment.pri)
 
-DISTFILES += \
-    lproxy/src/core/log/Makefile \
-    lproxy/src/core/log/Makefile.win32
+DISTFILES +=
 
 HEADERS += \
     websocketchannel/websocketclientwrapper.h \
