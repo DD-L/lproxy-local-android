@@ -9,8 +9,6 @@
 #include <lss/lss_server.h>
 #include <boost/thread.hpp> // C++11 中 std::thread 未提供中断点接口
 
-//#pragma pack(4)
-
 class CommunObject : public QObject {
     Q_OBJECT
 public:

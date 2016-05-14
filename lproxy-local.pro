@@ -5,8 +5,8 @@ TARGET = lproxy
 QT += qml quick core websockets webchannel
 #webkitwidgets webchannel
 
-#CONFIG += c++11 #console
-CONFIG += c++11 console
+CONFIG += c++11 #console
+#CONFIG += c++11 console
 
 !osx:qtHaveModule(webengine) {
         QT += webengine
@@ -61,13 +61,13 @@ DEFINES += \
         BOOST_DATE_TIME_SOURCE BOOST_SYSTEM_NO_LIB
 
 android {
-        QMAKE_CXXFLAGS += -pthread
+        #QMAKE_CXXFLAGS += -pthread
         equals(ANDROID_TARGET_ARCH, x86) {
-            LIBS += -L"$$_PRO_FILE_PWD_/libs/Androidx86" -lcryptopp -pthread #-lrt
+            LIBS += -L"$$_PRO_FILE_PWD_/libs/Androidx86" -lcryptopp #-pthread #-lrt
         } else: equals(ANDROID_TARGET_ARCH, armeabi-v7a) {
-            LIBS += -L"$$_PRO_FILE_PWD_/libs/Androidarmeabiv7a" -lcryptopp -pthread #-rt
+            LIBS += -L"$$_PRO_FILE_PWD_/libs/Androidarmeabiv7a" -lcryptopp #-pthread #-lrt
         } else {
-            LIBS += -L"$$_PRO_FILE_PWD_/libs/Android" -lcryptopp -pthread #-lrt
+            LIBS += -L"$$_PRO_FILE_PWD_/libs/Android" -lcryptopp #-pthread #-lrt
         }
         ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android-sources
 }
