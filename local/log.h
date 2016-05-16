@@ -8,7 +8,6 @@
  ************************************************************************/
 #include <lss/typedefine.h>
 #include <log/init_simple.h>
-#include "webchannelobject/webchannelobject.h"
 
 namespace lproxy {
 namespace mobile {

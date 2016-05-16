@@ -5,6 +5,9 @@
 	> Created Time: 2016/3/15 11:55:58
  ************************************************************************/
 
+#include "webchannelobject/_signal.h"
+#include "webchannelobject/webchannelobject.h"
+
 #include "local/log.h"
 #include <memory>
 #include <iostream>
@@ -104,14 +107,17 @@ sdata_t lproxy::mobile::log::output_format(const std::shared_ptr<LogVal>& val) {
         //<< val->extra
         << std::endl;
     //qDebug(oss.str().c_str());
-    return oss.str();
+    //return oss.str();
+
     /*
     CommunObject* obj = CommunObject::get_instance();
     if (obj) {
         obj->sendlog(oss.str());
     }
-    return "";
     */
+    CommunObject::get_instance().sendlog(oss.str());
+    return "";
+
 } // function lproxy::log::output_format
 
 

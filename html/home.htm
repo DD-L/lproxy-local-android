@@ -37,14 +37,14 @@
   <div data-role="header" data-position="fixed">
     <a href="#About" class="ui-btn ui-corner-all ui-shadow ui-icon-info ui-btn-icon-left">关于</a>
     <h1>lproxy</h1>
-    <a href="#" class="ui-btn ui-corner-all ui-shadow ui-icon-plus ui-btn-icon-left" id="plus">添加配置</a>
+    <a href="#warn_page" class="ui-btn ui-corner-all ui-shadow ui-icon-plus ui-btn-icon-left" id="plus">添加配置</a>
   </div>
 
   <div data-role="panel" id="About">
          <h2>About me
          <a href="#pageone" data-rel="close" class="ui-btn ui-btn-inline ui-shadow ui-corner-all ui-btn-a ui-icon-arrow-l ui-btn-icon-left">Close</a>
          </h2>
-         <p>lproxy</p>
+         <p>由 lproxy v0.2.2 驱动</p>
   </div>
 
    <div data-role="main" class="ui-content" id="main">
@@ -66,7 +66,7 @@
                           <option value="on">On</option>
                     </select>
                     <div style="float:right;">
-                    <a href="#pagetwo" class="ui-btn ui-btn-inline ui-corner-all ui-shadow" style="height:10px;" data-transition="pop">status</a>
+                    <a href="#status_page" class="ui-btn ui-btn-inline ui-corner-all ui-shadow" style="height:10px;" data-transition="pop">status</a>
                     </div>
                 </div>
         </div>
@@ -90,7 +90,7 @@
                           <option value="on">On</option>
                     </select>
                     <div style="float:right;">
-                    <a href="#pagetwo" class="ui-btn ui-btn-inline ui-corner-all ui-shadow" style="height:10px;" data-transition="pop">status</a>
+                    <a href="#status_page" class="ui-btn ui-btn-inline ui-corner-all ui-shadow" style="height:10px;" data-transition="pop">status</a>
                     </div>
                 </div>
         </div>
@@ -114,7 +114,7 @@
                           <option value="on">On</option>
                     </select>
                     <div style="float:right;">
-                    <a href="#pagetwo" class="ui-btn ui-btn-inline ui-corner-all ui-shadow" style="height:10px;" data-transition="pop">status</a>
+                    <a href="#status_page" class="ui-btn ui-btn-inline ui-corner-all ui-shadow" style="height:10px;" data-transition="pop">status</a>
                     </div>
                 </div>
         </div>
@@ -130,7 +130,7 @@
 </div> <!-- pageone-->
 
 
-<div data-role="page" id="pagetwo">
+<div data-role="page" id="status_page">
   <div data-role="header" data-position="fixed">
     <a href="#pageone" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left" data-transition="pop">Home</a>
     <h1>lproxy</h1>
@@ -147,9 +147,23 @@
   <div data-role="footer" data-position="fixed">
     <h1></h1>
   </div>
-</div> <!-- pagetwo -->
+</div> <!-- status_page -->
 
 
+<div data-role="page" id="warn_page">
+  <div data-role="header" data-position="fixed">
+    <a href="#pageone" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left" data-transition="pop">Home</a>
+    <h1>lproxy</h1>
+  </div>
+   <div data-role="main" class="ui-content">
+    <div class="ui-field-contain">
+      <p>非常抱歉，暂不支持此功能 。。。</p>
+    </div>
+   </div>
+  <div data-role="footer" data-position="fixed">
+    <h1></h1>
+  </div>
+</div> <!-- warn_page -->
 
 </body>
 <script type="text/javascript" src="./js/qwebchannel.js"></script>

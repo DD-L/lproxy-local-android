@@ -8,6 +8,8 @@ QT += qml quick core websockets webchannel
 CONFIG += c++11 #console
 #CONFIG += c++11 console
 
+QMAKE_CXXFLAGS += -Wno-ignored-qualifiers
+
 !osx:qtHaveModule(webengine) {
         QT += webengine
         DEFINES += QT_WEBVIEW_WEBENGINE_BACKEND
@@ -48,7 +50,8 @@ HEADERS += \
     websocketchannel/websocketclientwrapper.h \
     websocketchannel/websockettransport.h \
     webchannelobject/webchannelobject.h \
-    local/log.h
+    local/log.h \
+    webchannelobject/_signal.h
 
 INCLUDEPATH += \
         $$PWD/lproxy/contrib/boost/boost_1_57_0 \
@@ -63,11 +66,11 @@ DEFINES += \
 android {
         #QMAKE_CXXFLAGS += -pthread
         equals(ANDROID_TARGET_ARCH, x86) {
-            LIBS += -L"$$_PRO_FILE_PWD_/libs/Androidx86" -lcryptopp #-pthread #-lrt
+            LIBS += -L"$$_PRO_FILE_PWD_/libs/Androidx86" -lcryptopp -pthread #-lrt
         } else: equals(ANDROID_TARGET_ARCH, armeabi-v7a) {
-            LIBS += -L"$$_PRO_FILE_PWD_/libs/Androidarmeabiv7a" -lcryptopp #-pthread #-lrt
+            LIBS += -L"$$_PRO_FILE_PWD_/libs/Androidarmeabiv7a" -lcryptopp -pthread #-lrt
         } else {
-            LIBS += -L"$$_PRO_FILE_PWD_/libs/Android" -lcryptopp #-pthread #-lrt
+            LIBS += -L"$$_PRO_FILE_PWD_/libs/Android" -lcryptopp -pthread #-lrt
         }
         ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android-sources
 }

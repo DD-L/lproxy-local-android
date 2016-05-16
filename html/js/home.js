@@ -29,11 +29,12 @@ $(document).ready(function(){
       window.commun_object  = channel.objects.commun_object;
 
       commun_object.sendStatus.connect(function(message){
-        output('Recevied message: ' + message);
+        //output('Recevied message: ' + message);
+        output(message);
       });
-      commun_object.sendResults.connect(function(message){
-        $("textarea#results").val(message);
-      });
+      //commun_object.sendResults.connect(function(message){
+      //  $("textarea#results").val(message);
+      //});
 
       commun_object.sendJson.connect(function(json_str, id){
         var obj = JSON.parse(json_str);
@@ -160,11 +161,23 @@ function load_json() {
     }
 }
 
+var log_line_counter = function() {};
+var $psconsole = $("textarea#status");
 function output(message) {
-  var $psconsole = $("textarea#status");
   //$psconsole.append(message + '\n');
-  var text = $psconsole.val();
-  message = text + message + '\n';
+
+  if (log_line_counter.prototype.num === undefined) {
+    log_line_counter.prototype.num = 0;
+  }
+
+  // 每 20 行清零
+  if (++log_line_counter.prototype.num >= 20) {
+    log_line_counter.prototype.num = 0;
+  }
+  else {
+    var text = $psconsole.val();
+    message = text + message + '\n';
+  }
   $psconsole.val(message);
   // Scroll to down in textarea
   if($psconsole.length) {

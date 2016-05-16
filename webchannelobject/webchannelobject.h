@@ -19,17 +19,17 @@ public:
 
     void sendlog(const QString& log);
     void sendlog(const std::string& log);
-    // 并非单例，只是充当全局变量而已
-    static CommunObject* get_instance(void) {
-        return m_this;
-    }
 
+    // 并非单例，只是充当全局变量而已
+    static CommunObject& get_instance(void) {
+        return *m_this;
+    }
 public: signals:
     /*!
         This signal is emitted from the C++ side and the text displayed on the HTML client side.
     */
     void sendStatus(const QString& text);
-    void sendResults(const QString& text);
+    //void sendResults(const QString& text);
     void appExit();
     void sendJson(const QString& json, const QString& id);
     void offConfig(const QString& id);
