@@ -53,3 +53,17 @@
     overflow-y:scrooll;
 }
 */
+
+.ui-bar-a, .ui-page-theme-a .ui-bar-inherit, html .ui-bar-a .ui-bar-inherit, html .ui-body-a .ui-bar-inherit, html body .ui-group-theme-a .ui-bar-inherit {
+    background-color: #607d8b;
+    color: #fafafa;
+}
+
+/*
+.ui-overlay-a, .ui-page-theme-a, .ui-page-theme-a .ui-panel-wrapper {
+    background-color: #BBE0D4;
+}
+*/
+body, input, select, textarea, button, .ui-btn {
+    font-family: 'Microsoft Yahei', Tahoma, Helvetica, Arial, SimSun, sans-serif;
+}
