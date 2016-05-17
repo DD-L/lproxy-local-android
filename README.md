@@ -6,7 +6,7 @@ lproxy-local-android 借鉴了 [lproxy](https://github.com/DD-L/lproxy) 的另�
 
 ----------------------
 
-构建环境：
+#### 构建环境
 
 Android for armeabi-v7a(GCC 4.9, Qt 5.5.1)
 
@@ -22,8 +22,15 @@ Android for armeabi-v7a(GCC 4.9, Qt 5.5.1)
 * 华为荣耀7 Android 5.0.2
 
 
-目前本人对 Android 了解甚少，所以当前 `lproxy-local-android` 的功能还很不完善，没有“全局代理模式”，更没有“分应用代理模式”，目前只能像在 PC 端那样使用：绑定一个本地 socks5 端口。
+由于目前我本人对 Android 了解甚少，所以当前 `lproxy-local-android` 的功能还很不完善，没有“全局代理模式”，更没有“分应用代理模式”，目前只能像在 PC 端那样使用：绑定一个本地 socks5 端口。
 
 使用时，可能还需要借助 [`ProxyDroid`](https://github.com/madeye/proxydroid) 等类似的辅助软件；
 
 或直接使用 Android 版的 火狐（FireFox） 浏览器，火狐 Android 移动版浏览器设置 Socks5 代理的方法： [SetupSocks5ProxyFirefoxAndroid](https://github.com/DD-L/DailyNotes/blob/master/lproxy/lproxy-local-android/SetupSocks5ProxyFirefoxAndroid.md)
+
+
+#### [Releases](https://github.com/DD-L/lproxy-local-android/releases)
+
+* [v0.1-alpha](https://github.com/DD-L/lproxy-local-android/releases/tag/0.1-alpha) (*基于 [lproxy v0.2.2](https://github.com/DD-L/lproxy/releases/tag/0.2.2)*)
+
+    程序运行截图 [Screenshots-v0.1-alpha](https://github.com/DD-L/DailyNotes/blob/master/lproxy/lproxy-local-android/Screenshots-v0.1-alpha.md)
